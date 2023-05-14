@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Size;
 import org.hibernate.validator.constraints.URL;
 
 import java.sql.Timestamp;
+import java.util.Set;
 
 /**
  * @author E.I.
@@ -39,7 +40,7 @@ public class User {
     @Email
     @NotNull
     @Size(max = 100)
-    @Column(name = "user_email", length = 100) //used with schema definition
+    @Column(name = "user_email", length = 100) //this is only used for schema generation and validation.
     private String email;
 
     @URL
@@ -63,6 +64,10 @@ public class User {
     //@Column(name = "display_name", nullable = false)
     @Basic(optional = false) //when the naming convention matches hibernate one
     private String displayName;
+
+    @OneToMany
+    @JoinColumn(name = "user_id")
+    private Set<UserMeta> userMetaSet;
 
     public Long getId() {
         return id;
@@ -142,5 +147,13 @@ public class User {
 
     public void setDisplayName(String displayName) {
         this.displayName = displayName;
+    }
+
+    public Set<UserMeta> getUserMetaSet() {
+        return userMetaSet;
+    }
+
+    public void setUserMetaSet(Set<UserMeta> userMetaSet) {
+        this.userMetaSet = userMetaSet;
     }
 }

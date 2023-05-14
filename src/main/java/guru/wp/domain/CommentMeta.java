@@ -1,7 +1,6 @@
 package guru.wp.domain;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 /**
@@ -9,28 +8,28 @@ import jakarta.validation.constraints.Size;
  * <p>
  * {@code @Date}  5/14/2023
  */
+
 @Entity
-@Table(name = "wp_usermeta")
-public class UserMeta {
+@Table(name = "wp_commentmeta", indexes = {
+        @Index(name = "comment_id",columnList = "comment_id"),
+        @Index(name = "meta_key",columnList = "meta_key")
+})
+public class CommentMeta {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "umeta_id")
+    @Column(name = "meta_id")
     private Long id;
 
-
-    //private Long userId;
-
     @ManyToOne
-    private User user;
+    @JoinColumn(name = "comment_id")
+    private Comment comment;
 
-    @NotNull
     @Size(max = 255)
-    @Column(length = 255)
+    @Column(name = "meta_key")
     private String metaKey;
 
     @Lob
-    @Column(columnDefinition = "longtext")
     private String metaValue;
 
     public Long getId() {
@@ -41,13 +40,13 @@ public class UserMeta {
         this.id = id;
     }
 
-//    public Long getUserId() {
-//        return userId;
-//    }
-//
-//    public void setUserId(Long userId) {
-//        this.userId = userId;
-//    }
+    public Comment getComment() {
+        return comment;
+    }
+
+    public void setComment(Comment comment) {
+        this.comment = comment;
+    }
 
     public String getMetaKey() {
         return metaKey;
@@ -63,13 +62,5 @@ public class UserMeta {
 
     public void setMetaValue(String metaValue) {
         this.metaValue = metaValue;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 }
